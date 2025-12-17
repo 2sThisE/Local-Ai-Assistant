@@ -1,0 +1,83 @@
+/* 전체 배경: 딥 다크 그레이 */
+.root {
+    -fx-background-color: #121212;
+    -fx-font-family: 'Malgun Gothic', sans-serif;
+}
+
+/* 사이드바: 어두운 차콜 그라데이션 */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1E1E1E, #252526);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 0);
+}
+
+/* 사이드바 제목 레이블 (FXML에서 inline style 제거용) */
+.sidebar-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #BB86FC; /* 연한 라벤더색 (다크모드 포인트) */
+}
+
+/* 사이드바 버튼 */
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 15;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: #FFFFFF;
+}
+
+/* 채팅 영역 (WebView 컨테이너) */
+.chat-container {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+/* 하단 입력창 영역 패널 */
+.input-panel {
+    -fx-background-color: #2C2C2C;
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, -2);
+    -fx-border-color: #3E3E3E;
+    -fx-border-radius: 25;
+    -fx-border-width: 1;
+}
+
+/* 텍스트 입력 필드 */
+.chat-input {
+    -fx-background-color: transparent;
+    -fx-prompt-text-fill: #9E9E9E;
+    -fx-text-fill: #EEEEEE;
+    -fx-font-size: 14px;
+}
+
+.chat-input:focused {
+    -fx-background-color: transparent;
+}
+
+/* 전송 버튼: 네온 핑크/마젠타 (다크모드 포인트) */
+.send-button {
+    -fx-background-color: #FF4081;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 64, 129, 0.4), 8, 0, 0, 2);
+}
+
+.send-button:hover {
+    -fx-background-color: #F50057;
+}
+
+.send-button:pressed {
+    -fx-background-color: #C51162;
+    -fx-effect: none;
+    -fx-translate-y: 1;
+}

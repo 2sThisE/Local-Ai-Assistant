@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.AiController">
+            
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
+
+    <!-- 좌측: 사이드바 -->
+    <left>
+        <VBox prefWidth="200" spacing="15" styleClass="sidebar">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="30" />
+            </padding>
+            <!-- inline style 제거 후 styleClass 적용 -->
+            <Label styleClass="sidebar-label" text="AI Assistant" />
+            <VBox spacing="10">
+                <Button alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sidebar-button" text="✨ 새 채팅" />
+                <Button alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sidebar-button" text="⚙️ 설정" />
+                <Button alignment="TOP_LEFT" maxWidth="Infinity" styleClass="sidebar-button" text="❓ 도움말" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- 중앙: 채팅 화면 (WebView) -->
+    <center>
+        <VBox styleClass="chat-container">
+            <WebView fx:id="webView" minHeight="400" VBox.vgrow="ALWAYS" />
+           <VBox prefHeight="16.0" prefWidth="680.0" style="-fx-background-color: transparent;">
+               <padding>
+                   <Insets bottom="25" left="25" right="25" top="15" />
+               </padding>
+               <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="input-panel">
+                   <padding>
+                       <Insets bottom="10" left="20" right="15" top="10" />
+                   </padding>
+                   <TextField fx:id="inputField" onAction="#onSendMessage" promptText="무엇이든 물어보세요..." styleClass="chat-input" HBox.hgrow="ALWAYS" />
+                   <Button onAction="#onSendMessage" styleClass="send-button" text="전송" />
+               </HBox>
+           </VBox>
+        </VBox>
+    </center>
+</BorderPane>
