@@ -28,7 +28,7 @@ public class ToolManager {
         this.currentWorkingDirectory = new File(System.getProperty("user.dir"));
         
         // 플러그인 디렉토리 설정 (현재 작업 디렉토리 하위 'plugins')
-        this.pluginsDirectory = new File(this.currentWorkingDirectory, "config/plugins");
+        this.pluginsDirectory = new File(this.currentWorkingDirectory, "config/tools");
         if (!this.pluginsDirectory.exists()) {
             boolean created = this.pluginsDirectory.mkdirs();
             if (created) {

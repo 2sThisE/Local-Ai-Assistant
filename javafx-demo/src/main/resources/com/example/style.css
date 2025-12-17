@@ -127,6 +127,12 @@
     -fx-cursor: hand;
 }
 
+/* 리스트 셀 내부의 버튼 간 간격 */
+.settings-list-view .list-cell .button {
+    -fx-padding: 5 0; /* 상하 패딩을 주어 간격 확보 */
+}
+
+
 /* 마우스 올렸을 때 */
 .settings-list-view .list-cell:filled:hover {
     -fx-background-color: rgba(255, 255, 255, 0.05);
@@ -152,6 +158,7 @@
     -fx-border-radius: 5;
     -fx-background-radius: 5;
     -fx-padding: 2; /* 패딩을 줄여서 내부 텍스트 필드와 맞춤 */
+    -fx-font-size: 14px;
 }
 
 /* 내부 텍스트 필드 (이게 흰색으로 나와서 문제였음) */
@@ -196,4 +203,82 @@
 .dark-combo-box .list-cell:selected {
     -fx-background-color: #BB86FC;
     -fx-text-fill: #121212;
+}
+
+/* 전체 컨테이너 스타일 */
+.prompt-text-area {
+    -fx-background-color: #2C2C2C;    /* 입력창 배경색 */
+    -fx-border-color: #3E3E3E;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 14px;
+    -fx-border-width: 1.5;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: null;
+}
+
+/* 실제 글자가 입력되는 내부 영역 (이게 중요합니다) */
+.prompt-text-area .content {
+    -fx-background-color: #2C2C2C; /* 안쪽 상자에 배경색 적용 */
+    -fx-text-fill: #d4d4d4;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    
+}
+
+/* 포커스 잡혔을 때 (선택했을 때) */
+.prompt-text-area:focused .content {
+    -fx-border-color: #BB86FC;        /* 보라색 포인트 */
+    -fx-background-color: #2C2C2C;
+    -fx-effect: dropshadow(three-pass-box, rgba(187, 134, 252, 0.3), 5, 0, 0, 0);
+}
+
+/* 힌트 텍스트 (Prompt Text) 색상 */
+.prompt-text-area .text {
+    -fx-prompt-text-fill: #757575;
+}
+
+/* --- TextArea 내부 스크롤바 디자인 (JavaFX 컨트롤 전용) --- */
+
+/* 스크롤바 트랙 (배경) */
+.prompt-text-area .scroll-bar:vertical,
+.prompt-text-area .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.prompt-text-area .scroll-bar:vertical .track,
+.prompt-text-area .scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+}
+
+/* 스크롤바 핸들 (Thumb) */
+.prompt-text-area .scroll-bar .thumb {
+    -fx-background-color: #424242;
+    -fx-background-radius: 10;
+}
+
+.prompt-text-area .scroll-bar .thumb:hover {
+    -fx-background-color: #616161;
+}
+
+/* 스크롤바 화살표 버튼 숨기기 (모던한 느낌) */
+.prompt-text-area .scroll-bar .increment-button,
+.prompt-text-area .scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: #2C2C2C;
+    -fx-shape: null;
+}
+
+.prompt-text-area .scroll-bar .increment-arrow,
+.prompt-text-area .scroll-bar .decrement-arrow {
+    -fx-padding: 0;
+    -fx-shape: null;
+}
+
+.prompt-text-area .corner {
+    -fx-background-color: transparent; /* 배경 투명하게 */
 }

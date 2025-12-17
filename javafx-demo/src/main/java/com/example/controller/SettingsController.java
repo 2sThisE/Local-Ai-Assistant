@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -24,19 +25,22 @@ public class SettingsController {
 
     @FXML private VBox rootBox;
     @FXML private ComboBox<String> modelComboBox;
+    @FXML private TextArea promptTextArea;
+    @FXML private VBox settingsWindow;
 
     // [NEW] 좌측 메뉴 리스트
     @FXML private ListView<String> menuList;
 
     // [NEW] 우측 패널들
     @FXML private VBox aiPanel;
-    @FXML private VBox displayPanel;
+    @FXML private VBox toolPanel;
+    @FXML private VBox storagePanel;
     @FXML private VBox aboutPanel;
 
     @FXML
     public void initialize() {
         // 1. 메뉴 항목 추가
-        menuList.getItems().addAll("AI 모델 설정", "화면 설정", "정보");
+        menuList.getItems().addAll("AI 모델 설정", "도구 설정", "저장소 설정","정보");
 
         // 2. 리스트 선택 이벤트 리스너
         menuList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -47,7 +51,17 @@ public class SettingsController {
         menuList.getSelectionModel().select(0);
         AppConfigService config = AppConfigService.load();
         modelComboBox.setValue(config.getModelName());
+        if (config.getSystemPrompt() != null) {
+            promptTextArea.setText(config.getSystemPrompt());
+        }
         fetchOllamaModels();
+        // 1. 너비: 전체 화면의 70% (단, 최대 1000px은 넘지 않게)
+        settingsWindow.prefWidthProperty().bind(rootBox.widthProperty().multiply(0.7));
+        settingsWindow.maxWidthProperty().set(1000); 
+
+        // 2. 높이: 전체 화면의 80% (단, 최대 800px은 넘지 않게)
+        settingsWindow.prefHeightProperty().bind(rootBox.heightProperty().multiply(0.8));
+        settingsWindow.maxHeightProperty().set(800);
     }
 
     private void fetchOllamaModels() {
@@ -100,16 +114,20 @@ public class SettingsController {
 
         // 모든 패널 숨기기
         aiPanel.setVisible(false);
-        displayPanel.setVisible(false);
+        toolPanel.setVisible(false);
         aboutPanel.setVisible(false);
+        storagePanel.setVisible(false);
 
         // 선택된 것만 보이기
         switch (menuName) {
             case "AI 모델 설정":
                 aiPanel.setVisible(true);
                 break;
-            case "화면 설정":
-                displayPanel.setVisible(true);
+            case "도구 설정":
+                toolPanel.setVisible(true);
+                break;
+            case "저장소 설정":
+                storagePanel.setVisible(true);
                 break;
             case "정보":
                 aboutPanel.setVisible(true);
@@ -120,9 +138,10 @@ public class SettingsController {
 
     @FXML
     private void closeSettings() {
-        AppConfigService config = new AppConfigService();
+        AppConfigService config = AppConfigService.load();
         String selectedModel = modelComboBox.getValue();
         config.setModelName(selectedModel);
+        config.setSystemPrompt(promptTextArea.getText());
         config.save();
         setVisible(false);
     }

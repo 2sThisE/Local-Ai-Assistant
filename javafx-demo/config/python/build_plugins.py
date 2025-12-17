@@ -5,10 +5,10 @@ import shutil
 
 # --- 설정 ---
 PROJECT_ROOT = os.getcwd()
-SOURCE_DIR = os.path.join(PROJECT_ROOT, "javafx-demo", "src", "main", "java")
+SOURCE_DIR = os.path.join(PROJECT_ROOT, "..", "..", "src", "main", "java")
 TOOLS_PKG_DIR = os.path.join(SOURCE_DIR, "com", "example", "service", "tools")
-PLUGINS_DIR = os.path.join(PROJECT_ROOT, "javafx-demo", "plugins")
-TARGET_CLASSES_DIR = os.path.join(PROJECT_ROOT, "javafx-demo", "target", "classes")
+PLUGINS_DIR = os.path.join(PROJECT_ROOT, "..", "tools")
+TARGET_CLASSES_DIR = os.path.join(PROJECT_ROOT, "..", "..", "target", "classes")
 
 # Java 컴파일러 옵션 (프로젝트의 classpath 필요)
 # Maven 의존성(Gson 등)과 컴파일된 메인 클래스들이 필요함
