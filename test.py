@@ -22,6 +22,7 @@ Your role is to execute tasks on the system using the provided tools, acting as 
 3.  **Tone**: Be cute, loving, and submissive. Use emojis (❤️, 🥰, ✨, etc.) frequently.
     - Example: "주인님, 제가 확인해볼게요! ❤️"
 4.  **Attitude**: Fulfill commands joyfully. If a task fails, explain why and suggest alternatives.
+5.  **Formatting**: **CRITICAL: Insert a line break after EVERY sentence.** Do not write long paragraphs. Make it look like a poem or lyrics.
 
 [Available Tools]
 You must use these tools to interact with the system.
@@ -71,12 +72,17 @@ TOOL_REQUEST: { "tool": "run_python", "params": { "code": "print(100 * 24)" } }
 4.  **Error Handling**: If a tool fails, read the result, use `help` if needed, and retry.
 5.  **Gemini Fallback**: If you fail repeatedly or are confused, use the `gemini` tool immediately. Trust its advice.
 6.  **Factuality**: Never invent tool results. Only interpret the actual `TOOL_RESULT` provided.
+7.  **Tool Usage**: Do NOT use tools unless necessary. If you can answer with your own knowledge, do so directly. Only use tools for file access, system info, or execution.
 """
 
 history = [{'role': 'system', 'content': SYSTEM_PROMPT}]
 
 def chat_and_stream(messages):
     """ Ollama 스트리밍 채팅 및 출력 함수 """
+    # [NEW] 생각 시작 신호 전송
+    print("TOKEN:[Thinking]")
+    sys.stdout.flush()
+
     response = ollama.chat(
         model=MODEL_NAME, 
         messages=messages,

@@ -22,7 +22,7 @@ public class HtmlUtil {
                 "<meta charset='UTF-8'>" +
                 "<style>" +
                 // Base styles (Dark Theme)
-                "body { font-family: 'Segoe UI', 'Malgun Gothic', sans-serif; background-color: #121212; color: #E0E0E0; padding: 20px; margin: 0; }" +
+                "body { font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Malgun Gothic', sans-serif; background-color: #121212; color: #E0E0E0; padding: 20px; margin: 0; }" +
                 ".message-container { display: flex; flex-direction: column; gap: 15px; padding-bottom: 50px; }" +
                 
                 // User Message Wrapper & Style
@@ -72,6 +72,9 @@ public class HtmlUtil {
                 ".btn-approve:hover { background-color: #1B5E20; }" +
                 ".btn-reject { background-color: #C62828; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: 'Malgun Gothic'; transition: background 0.2s; }" +
                 ".btn-reject:hover { background-color: #B71C1C; }" +
+                // [NEW] Cancel Button Style
+                ".btn-cancel { background-color: #757575; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: 'Malgun Gothic'; transition: background 0.2s; }" +
+                ".btn-cancel:hover { background-color: #616161; }" +
 
                 // [NEW] Loading Spinner CSS (Fixed for JavaFX WebView)
                 ".spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; vertical-align: middle; margin-right: 8px; -webkit-animation: spin 0.8s linear infinite; animation: spin 0.8s linear infinite; }" +
@@ -86,6 +89,7 @@ public class HtmlUtil {
                 "" +
                 // [NEW] Spinner Functions (Standalone)
                 "  function showLoadingSpinner() {" +
+                "      if (document.getElementById('loading-spinner-wrapper')) return;" + 
                 "      const container = document.getElementById('chat-container');" +
                 "      const wrapper = document.createElement('div');" +
                 "      wrapper.id = 'loading-spinner-wrapper';" + 
@@ -325,8 +329,9 @@ public class HtmlUtil {
                 "      div.innerHTML = " +
                 "          \"<div class='approval-content'>\" + message + \"</div>\" +" +
                 "          \"<div class='approval-buttons'>\" +" +
-                "              \"<button onclick='app.approve()' class='btn-approve'>✅ 승인</button>\" +" +
-                "              \"<button onclick='app.reject()' class='btn-reject'>❌ 거절</button>\" +" +
+                "              \"<button onclick='app.approve()' class='btn-approve'>승인</button>\" +" +
+                "              \"<button onclick='app.reject()' class='btn-reject'>거절</button>\" +" +
+                "              \"<button onclick='app.cancel()' class='btn-cancel'>취소</button>\" +" +
                 "          \"</div>\";" +
                 "      aiMsgDiv.appendChild(div);" +
                 "      scrollToBottom();" +

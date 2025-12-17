@@ -1,7 +1,7 @@
 /* 전체 배경: 딥 다크 그레이 */
 .root {
     -fx-background-color: #121212;
-    -fx-font-family: 'Malgun Gothic', sans-serif;
+    -fx-font-family: 'Segoe UI', 'Malgun Gothic',  sans-serif;
 }
 
 /* 사이드바: 어두운 차콜 그라데이션 */

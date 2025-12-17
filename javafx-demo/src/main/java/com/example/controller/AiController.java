@@ -93,6 +93,13 @@ public class AiController {
             token -> Platform.runLater(() -> {
                 if (stopRequested) return; // [NEW] 중단 요청 시 무시
 
+                // [NEW] Python의 생각 시작 신호 감지
+                if ("[Thinking]".equals(token)) {
+                    webEngine.executeScript("showLoadingSpinner()");
+                    toggleButtonState(true);
+                    return;
+                }
+
                 if (!isAiResponding) {
                     // [NEW] 첫 토큰 수신 시 스피너 제거 및 메시지 시작
                     webEngine.executeScript("hideLoadingSpinner()");
@@ -107,6 +114,10 @@ public class AiController {
                     isAiResponding = true;
                     currentAiText.setLength(0);
                 }
+                
+                // [NPE 방지] 만약 초기화에 실패했다면 토큰 무시
+                if (currentAiMessage == null) return;
+
                 currentAiText.append(token);
                 // 실시간으로 원본 텍스트 업데이트
                 currentAiMessage.setContent(currentAiText.toString());
@@ -424,10 +435,10 @@ public class AiController {
 
         webEngine.executeScript("appendUserMessage('" + escapeJs(msg) + "', '" + userMessage.getId() + "')");
         
-        // [NEW] 상태 변경: 응답 중은 아니지만(false), 스피너는 돌린다.
+        // [NEW] 상태 변경: 응답 중은 아니지만(false), 스피너는 Python 신호 대기
         isAiResponding = false; 
         toggleButtonState(true);
-        webEngine.executeScript("showLoadingSpinner()");
+        // webEngine.executeScript("showLoadingSpinner()"); // [REMOVED] Python [Thinking] 신호로 대체
 
         pythonService.sendMessage(msg);
         inputField.clear();
@@ -468,13 +479,13 @@ public class AiController {
                         String appendContent = "\n\n" +
                                 "<div class='approval-container' style='border-color: #FF5252;'>" +
                                     "<div class='approval-content'>" +
-                                        "<b>[취소됨]</b> ❌ 사용자가 도구 실행을 거절했습니다." +
+                                        "<b>[거절됨]</b> 🚫 사용자가 도구 실행을 거절했습니다." +
                                     "</div>" +
                                 "</div>";
                         renderAndCheckTool(targetMessage, oldContent + appendContent);
                     } else {
                         webEngine.executeScript("removeApprovalBox()");
-                        webEngine.executeScript("appendSystemMessage('❌ 실행을 취소했습니다.')");
+                        webEngine.executeScript("appendSystemMessage('🚫 실행을 거절했습니다.')");
                     }
                     
                     JsonObject result = new JsonObject();
@@ -483,6 +494,19 @@ public class AiController {
                     pythonService.sendToolResult(gson.toJson(result));
                     
                     pendingToolJson = null;
+                }
+            });
+        }
+
+        // [NEW] 아예 취소 (AI에게 데이터 전송 X)
+        public void cancel() {
+            Platform.runLater(() -> {
+                if (pendingToolJson != null) {
+                    webEngine.executeScript("removeApprovalBox()");
+                    webEngine.executeScript("appendSystemMessage('❌ 도구 실행을 취소했습니다. (AI에게 전송되지 않음)')");
+                    
+                    pendingToolJson = null;
+                    toggleButtonState(false);
                 }
             });
         }
