@@ -45,7 +45,7 @@
                        <Insets bottom="10" left="20" right="15" top="10" />
                    </padding>
                    <TextField fx:id="inputField" onAction="#onSendMessage" promptText="무엇이든 물어보세요..." styleClass="chat-input" HBox.hgrow="ALWAYS" />
-                   <Button onAction="#onSendMessage" styleClass="send-button" text="전송" />
+                   <Button fx:id="sendButton" onAction="#onSendMessage" styleClass="send-button" text="전송" />
                </HBox>
            </VBox>
         </VBox>

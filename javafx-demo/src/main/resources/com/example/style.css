@@ -81,3 +81,17 @@
     -fx-effect: none;
     -fx-translate-y: 1;
 }
+
+/* 중지 버튼 (전송 버튼 대체) */
+.stop-button {
+    -fx-background-color: #FF5252;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 82, 82, 0.4), 8, 0, 0, 2);
+}
+
+.stop-button:hover {
+    -fx-background-color: #FF1744;
+}
+
+.stop-button:pressed {
+    -fx-background-color: #D32F2F;
+}

@@ -12,6 +12,7 @@ import com.google.gson.stream.JsonReader;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -31,10 +32,14 @@ public class AiController {
     @FXML
     private TextField inputField;
 
+    @FXML
+    private Button sendButton; // [NEW] 버튼 제어
+
     private WebEngine webEngine;
     private final PythonService pythonService = new PythonService();
     private final ToolManager toolManager = new ToolManager(); 
     private boolean isAiResponding = false;
+    private boolean stopRequested = false; // [NEW] 중단 요청 플래그
     private final Gson gson = new Gson();
     
     private StringBuilder currentAiText = new StringBuilder();
@@ -76,6 +81,8 @@ public class AiController {
     private void startPythonService() {
         pythonService.start(
             message -> Platform.runLater(() -> {
+                if (stopRequested) return; // [NEW] 중단 요청 시 무시
+
                 if ("[DONE]".equals(message)) {
                     finishAiMessage();
                 } else {
@@ -84,7 +91,12 @@ public class AiController {
                 }
             }),
             token -> Platform.runLater(() -> {
+                if (stopRequested) return; // [NEW] 중단 요청 시 무시
+
                 if (!isAiResponding) {
+                    // [NEW] 첫 토큰 수신 시 스피너 제거 및 메시지 시작
+                    webEngine.executeScript("hideLoadingSpinner()");
+                    
                     // 새로운 AI 메시지 객체 생성 및 저장
                     currentAiMessage = new com.example.model.ChatMessage("ai", "");
                     messageHistory.add(currentAiMessage);
@@ -116,7 +128,39 @@ public class AiController {
             isAiResponding = false;
             currentAiText.setLength(0);
             currentAiMessage = null;
+            
+            // [NEW] 버튼 상태 복구 및 스피너 안전 제거
+            toggleButtonState(false);
+            webEngine.executeScript("hideLoadingSpinner()");
         }
+    }
+
+    // [NEW] 버튼 상태 토글 (전송 <-> 중지)
+    private void toggleButtonState(boolean responding) {
+        if (sendButton == null) return;
+        
+        if (responding) {
+            sendButton.setText("중지");
+            if (!sendButton.getStyleClass().contains("stop-button")) {
+                sendButton.getStyleClass().add("stop-button");
+            }
+        } else {
+            sendButton.setText("전송");
+            sendButton.getStyleClass().remove("stop-button");
+        }
+    }
+
+    // [NEW] 생성 중단 처리
+    private void stopGeneration() {
+        stopRequested = true;
+        isAiResponding = false;
+        
+        // UI 정리
+        finishAiMessage(); // 현재 메시지 마무리 (또는 버리기)
+        webEngine.executeScript("hideLoadingSpinner()"); // [FIX] 스피너 확실히 제거
+        webEngine.executeScript("appendSystemMessage('⛔ 사용자에 의해 중단되었습니다.')");
+        
+        toggleButtonState(false);
     }
 
     // 메시지 렌더링 및 도구 요청 파싱 공통 로직 (핵심 수정)
@@ -356,16 +400,35 @@ public class AiController {
 
     @FXML
     protected void onSendMessage() {
+        // [NEW] 중단 요청 처리
+        if (isAiResponding) { // 여기는 실제로 응답 중일 때만 들어옴 (true일 때)
+            stopGeneration();
+            return;
+        }
+        
+        // 버튼이 '중지' 상태이지만 isAiResponding이 false인 경우 (대기 상태 등)
+        // -> 이 경우도 중단으로 처리해야 함 (스피너만 돌고 있는 상태)
+        if (stopRequested) {
+             stopGeneration();
+             return;
+        }
+
         String msg = inputField.getText();
         if (msg.trim().isEmpty()) return;
 
-        if (isAiResponding) finishAiMessage();
+        // 새로운 메시지 시작 전 중단 플래그 초기화
+        stopRequested = false;
 
         ChatMessage userMessage = new ChatMessage("user", msg);
         messageHistory.add(userMessage);
 
         webEngine.executeScript("appendUserMessage('" + escapeJs(msg) + "', '" + userMessage.getId() + "')");
         
+        // [NEW] 상태 변경: 응답 중은 아니지만(false), 스피너는 돌린다.
+        isAiResponding = false; 
+        toggleButtonState(true);
+        webEngine.executeScript("showLoadingSpinner()");
+
         pythonService.sendMessage(msg);
         inputField.clear();
     }

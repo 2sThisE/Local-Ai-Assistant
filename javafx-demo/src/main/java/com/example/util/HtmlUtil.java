@@ -72,11 +72,36 @@ public class HtmlUtil {
                 ".btn-approve:hover { background-color: #1B5E20; }" +
                 ".btn-reject { background-color: #C62828; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: 'Malgun Gothic'; transition: background 0.2s; }" +
                 ".btn-reject:hover { background-color: #B71C1C; }" +
+
+                // [NEW] Loading Spinner CSS (Fixed for JavaFX WebView)
+                ".spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; vertical-align: middle; margin-right: 8px; -webkit-animation: spin 0.8s linear infinite; animation: spin 0.8s linear infinite; }" +
+                "@-webkit-keyframes spin { from { -webkit-transform: rotate(0deg); } to { -webkit-transform: rotate(360deg); } }" +
+                "@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }" +
+                ".loading-text { color: #ccc; font-style: italic; font-size: 13px; vertical-align: middle; }" +
                 
                 "</style>" +
                 "<script>" +
                 "  let currentAiDiv = null;" +
                 "  let rawAiText = '';" +
+                "" +
+                // [NEW] Spinner Functions (Standalone)
+                "  function showLoadingSpinner() {" +
+                "      const container = document.getElementById('chat-container');" +
+                "      const wrapper = document.createElement('div');" +
+                "      wrapper.id = 'loading-spinner-wrapper';" + 
+                "      wrapper.style.display = 'flex';" +
+                "      wrapper.style.alignItems = 'center';" +
+                "      wrapper.style.padding = '10px 20px';" + 
+                "      wrapper.style.marginTop = '10px';" +
+                "      wrapper.innerHTML = '<span class=\"spinner\"></span><span class=\"loading-text\">생각하는 중...</span>';" +
+                "      container.appendChild(wrapper);" +
+                "      scrollToBottom();" +
+                "  }" +
+                "" +
+                "  function hideLoadingSpinner() {" +
+                "      const wrapper = document.getElementById('loading-spinner-wrapper');" +
+                "      if (wrapper) { wrapper.remove(); }" +
+                "  }" +
                 "" +
                 "  function scrollToBottom() { window.scrollTo(0, document.body.scrollHeight); }" +
                 "" +
