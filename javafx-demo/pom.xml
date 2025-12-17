@@ -87,6 +87,7 @@
                             <noHeaderFiles>true</noHeaderFiles>
                             <options>
                                 <option>-Xmx2g</option>
+                                <option>-Dprism.lcdtext=false</option>
                             </options>
                         </configuration>
                     </execution>

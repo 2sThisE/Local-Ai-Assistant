@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 public class PythonService {
 
     // 경로 설정
-    private static final String PYTHON_SCRIPT_PATH = "F:\\programing\\ai-assistant\\test.py";
+    private static final String PYTHON_SCRIPT_PATH = "config/python/test.py";
     private static final String PYTHON_EXE = "python";
 
     private Process process;

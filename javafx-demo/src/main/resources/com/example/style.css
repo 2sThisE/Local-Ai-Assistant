@@ -1,7 +1,7 @@
 /* 전체 배경: 딥 다크 그레이 */
 .root {
     -fx-background-color: #121212;
-    -fx-font-family: 'Segoe UI', 'Malgun Gothic',  sans-serif;
+    -fx-font-family: 'Pretendard Medium', 'Segoe UI', 'Malgun Gothic',  sans-serif;
 }
 
 /* 사이드바: 어두운 차콜 그라데이션 */
@@ -13,7 +13,7 @@
 /* 사이드바 제목 레이블 (FXML에서 inline style 제거용) */
 .sidebar-label {
     -fx-font-size: 20px;
-    -fx-font-weight: bold;
+    -fx-font-family: 'Pretendard Bold';
     -fx-text-fill: #BB86FC; /* 연한 라벤더색 (다크모드 포인트) */
 }
 
@@ -61,6 +61,17 @@
     -fx-background-color: transparent;
 }
 
+.add-button {
+    
+    -fx-background-color: transparent;
+    -fx-text-fill: #b3b3b3;
+    -fx-font-size: 25px;
+    -fx-padding: 0;
+}
+.add-button:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.2), 6, 0, 0, 0);
+}
+
 /* 전송 버튼: 네온 핑크/마젠타 (다크모드 포인트) */
 .send-button {
     -fx-background-color: #FF4081;
@@ -94,4 +105,95 @@
 
 .stop-button:pressed {
     -fx-background-color: #D32F2F;
+}
+
+/* 기존 코드 아래에 추가 */
+
+/* --- 설정창 ListView 스타일 --- */
+.settings-list-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 10;
+}
+
+/* 리스트 셀 (항목 하나하나) */
+.settings-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9E9E9E;
+    -fx-font-family: 'Malgun Gothic'; /* 또는 Pretendard */
+    -fx-font-size: 14px;
+    -fx-padding: 10 15;
+    -fx-background-radius: 8; /* 둥근 모서리 */
+    -fx-cursor: hand;
+}
+
+/* 마우스 올렸을 때 */
+.settings-list-view .list-cell:filled:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-text-fill: #E0E0E0;
+}
+
+/* 선택되었을 때 */
+.settings-list-view .list-cell:filled:selected {
+    -fx-background-color: #333333; /* 선택된 배경색 */
+    -fx-text-fill: #BB86FC; /* 선택된 글자색 (포인트 컬러) */
+    -fx-font-weight: bold;
+}
+
+/* 비어있는 셀 배경 제거 */
+.settings-list-view .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+/* --- 다크 모드 콤보박스 (Editable) --- */
+.dark-combo-box {
+    -fx-background-color: #2C2C2C;
+    -fx-border-color: #3E3E3E;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 2; /* 패딩을 줄여서 내부 텍스트 필드와 맞춤 */
+}
+
+/* 내부 텍스트 필드 (이게 흰색으로 나와서 문제였음) */
+.dark-combo-box .text-field {
+    -fx-background-color: transparent; /* 배경 투명하게 */
+    -fx-text-fill: #E0E0E0;            /* 글자색 밝게 */
+    -fx-prompt-text-fill: #757575;
+}
+
+/* 화살표 버튼 영역 */
+.dark-combo-box .arrow-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.dark-combo-box .arrow {
+    -fx-background-color: #9E9E9E;
+}
+
+/* 마우스 올렸을 때 화살표 색상 변경 */
+.dark-combo-box:hover .arrow {
+    -fx-background-color: #E0E0E0;
+}
+
+/* --- 팝업 리스트 (드롭다운) 디자인 --- */
+.dark-combo-box .list-view {
+    -fx-background-color: #2C2C2C;
+    -fx-border-color: #3E3E3E;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 5);
+}
+
+.dark-combo-box .list-cell {
+    -fx-background-color: #2C2C2C;
+    -fx-text-fill: #E0E0E0;
+    -fx-padding: 8 10;
+}
+
+.dark-combo-box .list-cell:hover {
+    -fx-background-color: #3E3E3E;
+}
+
+.dark-combo-box .list-cell:selected {
+    -fx-background-color: #BB86FC;
+    -fx-text-fill: #121212;
 }

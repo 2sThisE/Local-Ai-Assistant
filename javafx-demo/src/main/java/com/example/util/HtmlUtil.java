@@ -11,7 +11,9 @@ public class HtmlUtil {
         if (markdown == null) return "";
         Parser parser = Parser.builder().build();
         Node document = parser.parse(markdown);
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder()
+                .softbreak("<br>") // 엔터 한 번도 줄바꿈으로 처리
+                .build();
         return renderer.render(document);
     }
 
@@ -20,18 +22,26 @@ public class HtmlUtil {
                 "<html lang='ko'>" +
                 "<head>" +
                 "<meta charset='UTF-8'>" +
+                "<link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css' />" +
                 "<style>" +
                 // Base styles (Dark Theme)
-                "body { font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Malgun Gothic', sans-serif; background-color: #121212; color: #E0E0E0; padding: 20px; margin: 0; }" +
+                "body { font-family: 'Pretendard','Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji',  sans-serif; background-color: #121212; color: #E0E0E0; padding: 20px; margin: 0; " +
+                "   -webkit-font-smoothing: antialiased;" +
+                "   text-rendering: optimizeLegibility; }" +
                 ".message-container { display: flex; flex-direction: column; gap: 15px; padding-bottom: 50px; }" +
                 
                 // User Message Wrapper & Style
                 ".user-wrapper { display: flex; flex-direction: column; align-items: flex-end; max-width: 85%; align-self: flex-end; }" +
-                ".user-msg { background-color: #1B5E20; color: #E8F5E9; padding: 12px 18px; border-radius: 18px 18px 0 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.5); font-size: 14px; line-height: 1.5; width: fit-content; }" +
+                ".user-msg { background-color: #1B5E20; color: #E8F5E9; padding: 12px 18px; border-radius: 18px 18px 0 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.5); font-size: 16px; line-height: 1.5; width: fit-content;" +
+                "   border: 1px solid transparent;" +      // 1. 투명 테두리를 주면 렌더링 방식이 바뀌며 부드러워짐
+                "   background-clip: padding-box;" +       // 2. 배경색이 테두리 영역을 침범하지 않게 설정
+                "   transform: translateZ(0);" +           // 3. GPU 가속을 강제하여 렌더링 품질 향상
+                "   -webkit-font-smoothing: antialiased;" + // (옵션) 폰트도 부드럽게
+                "}" +
                 
                 // AI Message Wrapper & Style
                 ".ai-wrapper { display: flex; flex-direction: column; align-items: flex-start; max-width: 85%; }" +
-                ".ai-msg { background-color: #333333; color: #FAFAFA; padding: 15px 20px; border-radius: 18px 18px 18px 0; border: 1px solid #444444; box-shadow: 0 1px 2px rgba(0,0,0,0.5); font-size: 14px; line-height: 1.6; width: 100%; box-sizing: border-box; }" +
+                ".ai-msg { background-color: #333333; color: #FAFAFA; padding: 15px 20px; border-radius: 18px 18px 18px 0; border: 1px solid #444444; box-shadow: 0 1px 2px rgba(0,0,0,0.5); font-size: 16px; line-height: 1.6; width: 100%; box-sizing: border-box; }" +
                 
                 // [NEW] Message Actions (Copy/Edit)
                 ".msg-actions { display: flex; gap: 5px; margin-top: 4px; opacity: 0; transition: opacity 0.2s; padding: 0 5px; }" +
@@ -43,7 +53,7 @@ public class HtmlUtil {
                 ".edit-area { width: 100%; box-sizing: border-box; background-color: #212121; color: #E0E0E0; border: 1px solid #4CAF50; border-radius: 8px; padding: 10px; font-family: 'Consolas', monospace; font-size: 13px; min-height: 60px; resize: vertical; margin-bottom: 5px; }" +
                 ".edit-controls { display: flex; justify-content: flex-end; gap: 8px; }" +
                 ".btn-save { background-color: #2E7D32; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }" +
-                ".btn-cancel { background-color: #424242; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }" +
+                ".btn-edit-cancel { background-color: #424242; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }" +
 
                 // System Message
                 ".system-wrapper { display: flex; justify-content: center; width: 100%; }" +
@@ -81,12 +91,41 @@ public class HtmlUtil {
                 "@-webkit-keyframes spin { from { -webkit-transform: rotate(0deg); } to { -webkit-transform: rotate(360deg); } }" +
                 "@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }" +
                 ".loading-text { color: #ccc; font-style: italic; font-size: 13px; vertical-align: middle; }" +
+
+                "::-webkit-scrollbar {" +
+                "    width: 12px;" +  // 세로 스크롤바 너비
+                "    height: 12px;" + // 가로 스크롤바 높이
+                "    background-color: #121212;" + // 배경색 (body와 동일하게)
+                "}" +
+
+                /* 스크롤바 트랙 (움직이지 않는 배경 부분) */
+                "::-webkit-scrollbar-track {" +
+                "    background-color: #121212;" + 
+                "    border-radius: 10px;" +
+                "}" +
+
+                /* 스크롤바 핸들 (움직이는 막대) */
+                "::-webkit-scrollbar-thumb {" +
+                "    background-color: #333333;" + // 기본 막대 색상 (입력창보다 살짝 밝게)
+                "    border-radius: 10px;" +       // 둥글게
+                "    border: 3px solid #121212;" + // 테두리를 배경색과 같게 해서 '공백' 효과 줌
+                "}" +
+
+                /* 마우스 올렸을 때 핸들 색상 */
+                "::-webkit-scrollbar-thumb:hover {" +
+                "    background-color: #555555;" + // 호버 시 좀 더 밝은 회색
+                "}" +
+
+                /* (선택) 코너 부분 */
+                "::-webkit-scrollbar-corner {" +
+                "    background-color: #121212;" +
+                "}" +
                 
                 "</style>" +
                 "<script>" +
                 "  let currentAiDiv = null;" +
                 "  let rawAiText = '';" +
-                "" +
+                "" +                
                 // [NEW] Spinner Functions (Standalone)
                 "  function showLoadingSpinner() {" +
                 "      if (document.getElementById('loading-spinner-wrapper')) return;" + 
@@ -213,7 +252,7 @@ public class HtmlUtil {
                 "      controls.className = 'edit-controls';" +
                 "      controls.innerHTML = " +
                 "          '<button class=\"btn-save\" onclick=\"saveEdit(\\'' + id + '\\')\">저장</button>' +" +
-                "          '<button class=\"btn-cancel\" onclick=\"cancelEdit(this)\">취소</button>';" +
+                "          '<button class=\"btn-edit-cancel\" onclick=\"cancelEdit(this)\">취소</button>';" +
                 "      " +
                 "      textarea.dataset.originalHtml = currentHtml;" +
                 "      " +

@@ -24,7 +24,7 @@ public class PwdTool implements Tool {
 
     @Override
     public String getUsage() {
-        return "{} (파라미터 없음)";
+        return "{} (empty param)";
     }
 
     @Override
