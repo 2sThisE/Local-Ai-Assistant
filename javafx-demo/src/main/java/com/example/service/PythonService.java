@@ -17,7 +17,7 @@ public class PythonService {
     private boolean isRunning = false;
 
     // 파이썬 프로세스 시작
-    public void start(Consumer<String> onMessage, Consumer<String> onToken, Consumer<String> onToolRequest) {
+    public void start(Consumer<String> onMessage, Consumer<String> onToken, Consumer<String> onToolRequest, Consumer<String> onSummaryResult) {
         try {
             ProcessBuilder pb = new ProcessBuilder(PYTHON_EXE, "-u", PYTHON_SCRIPT_PATH);
             pb.redirectErrorStream(true);
@@ -42,14 +42,19 @@ public class PythonService {
                                 if (onToken != null) onToken.accept(token);
                             }
                         }
-                        // 2. [NEW] 도구 사용 요청 (JSON)
+                        // 2. [NEW] 요약 결과 수신
+                        else if (line.startsWith("SUMMARY_RESULT:")) {
+                            String summary = line.substring(15).replace("[NEWLINE]", "\n");
+                            if (onSummaryResult != null) onSummaryResult.accept(summary);
+                        }
+                        // 3. [NEW] 도구 사용 요청 (JSON)
                         else if (line.contains("TOOL_REQUEST:")) {
                             // "TOOL_REQUEST: { ... }" 형태에서 JSON만 추출
                             int idx = line.indexOf("TOOL_REQUEST:");
                             String json = line.substring(idx + 13).trim();
                             if (onToolRequest != null) onToolRequest.accept(json);
                         }
-                        // 3. 일반 시스템 메시지
+                        // 4. 일반 시스템 메시지
                         else {
                             String finalLine = line.replace("[NEWLINE]", "\n");
                             if (onMessage != null) onMessage.accept(finalLine);

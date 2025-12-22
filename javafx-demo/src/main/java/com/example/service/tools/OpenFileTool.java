@@ -53,7 +53,7 @@ public class OpenFileTool implements Tool {
         try {
             switch (mode) {
                 case "r": // 텍스트 읽기
-                    if (!Files.exists(path)) return new ToolResult(false, "파일이 존재하지 않습니다: " + pathStr);
+                    if (!Files.exists(path)) return new ToolResult(false, "파일이 존재하지 않습니다: '" + pathStr+"'\nchdir툴을 이용하여 작업 디렉토리를 변경하거나 절대경로를 사용하세요");
                     String content = Files.readString(path, StandardCharsets.UTF_8);
                     // 너무 긴 파일은 앞부분만 읽기 (옵션) - 현재는 전체 읽기
                     return new ToolResult(true, content);
@@ -65,7 +65,7 @@ public class OpenFileTool implements Tool {
                     return new ToolResult(true, "파일 저장 완료: " + pathStr);
 
                 case "rb": // 바이너리 읽기 (Base64 반환)
-                    if (!Files.exists(path)) return new ToolResult(false, "파일이 존재하지 않습니다: " + pathStr);
+                    if (!Files.exists(path)) new ToolResult(false, "파일이 존재하지 않습니다: '" + pathStr+"'\nchdir툴을 이용하여 작업 디렉토리를 변경하거나 절대경로를 사용하세요");
                     byte[] fileBytes = Files.readAllBytes(path);
                     String base64Content = Base64.getEncoder().encodeToString(fileBytes);
                     return new ToolResult(true, base64Content);

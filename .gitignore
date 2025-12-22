@@ -70,3 +70,6 @@ tmp/
 
 # eles
 제미니용.txt
+
+# database config
+db_config.json

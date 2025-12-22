@@ -17,6 +17,7 @@ public class ChatWebView {
     private final WebEngine webEngine;
     private ChatService chatService; // 로직 처리를 위해 필요
     private JavaBridge javaBridge;
+    private Runnable onReady; // 로딩 완료 콜백
 
     public ChatWebView(WebView webView) {
         this.webView = webView;
@@ -27,6 +28,10 @@ public class ChatWebView {
     public void setChatService(ChatService chatService) {
         this.chatService = chatService;
     }
+    
+    public void setOnReady(Runnable onReady) {
+        this.onReady = onReady;
+    }
 
     private void initialize() {
         webEngine.setJavaScriptEnabled(true);
@@ -35,6 +40,11 @@ public class ChatWebView {
                 JSObject window = (JSObject) webEngine.executeScript("window");
                 this.javaBridge = new JavaBridge();
                 window.setMember("app", javaBridge);
+                
+                // 로딩 완료 콜백 실행
+                if (onReady != null) {
+                    onReady.run();
+                }
             }
         });
         webEngine.loadContent(HtmlUtil.getSkeletonHtml());

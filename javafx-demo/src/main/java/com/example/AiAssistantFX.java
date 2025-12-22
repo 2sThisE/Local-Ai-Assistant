@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.controller.AiController;
+import com.example.service.DatabaseService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,6 +16,12 @@ public class AiAssistantFX extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        // 데이터베이스 미리 연결 (관리자 계정)
+        // 백그라운드 스레드에서 실행해서 UI 멈춤 방지하면 더 좋겠지만, 일단 여기서 심플하게 호출
+        new Thread(() -> {
+            DatabaseService.getInstance().getAppConnection();
+        }).start();
+
         Font font1=Font.loadFont(getClass().getResourceAsStream("/com/example/fonts/Pretendard-Regular.ttf"), 12);
         Font font2=Font.loadFont(getClass().getResourceAsStream("/com/example/fonts/Pretendard-Medium.ttf"), 12);
         Font font3=Font.loadFont(getClass().getResourceAsStream("/com/example/fonts/Pretendard-Bold.ttf"), 12);
@@ -47,6 +54,8 @@ public class AiAssistantFX extends Application {
         if (controller != null) {
             controller.shutdown();
         }
+        // 데이터베이스 연결 종료
+        DatabaseService.getInstance().closeAll();
     }
 
     public static void main(String[] args) {
